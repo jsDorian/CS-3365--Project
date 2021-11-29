@@ -1,0 +1,51 @@
+package application;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
+import java.sql.*;
+import java.util.ArrayList;
+
+public class itemIdHandler implements EventHandler<ActionEvent> {
+	TextField field;
+	Label error;
+	String dbAddr = "jdbc:sqlite:stock.db";
+	Connector db;
+	Connection conn;
+	
+	public itemIdHandler(TextField field, Label error) {
+		this.field = field;
+		this.error = error;
+		db = new Connector(dbAddr);
+		conn = db.getConnection();
+	}
+	
+	@Override
+	public void handle(ActionEvent event) throws RuntimeException {
+		int id = Integer.parseInt(field.getText());
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM products WHERE id = ? LIMIT 1");
+			stmt.setInt(1, id);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				String name = rs.getString("name");
+				int price = rs.getInt("price");
+				int amount = rs.getInt("available_amount");
+				
+				Item item = new Item(name, price, amount, id);
+			}
+			
+			rs.close();
+			stmt.close();
+			
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("getUser: " + e.getMessage());
+		}
+		
+		return;
+	}
+}

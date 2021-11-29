@@ -1,0 +1,15 @@
+package application;
+
+public class Item {
+	int itemId;
+	String name;
+	String desc;
+	int price;
+	
+	public Item(int itemId, String name, String desc, int price) {
+		this.itemId = itemId;
+		this.name = name;
+		this.desc = desc;
+		this.price = price;
+	}
+}

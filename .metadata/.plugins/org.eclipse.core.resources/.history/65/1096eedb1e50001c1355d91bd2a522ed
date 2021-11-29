@@ -1,0 +1,31 @@
+package application;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
+import java.sql.*;
+import java.util.ArrayList;
+
+public class totalHandler implements EventHandler<ActionEvent> {
+	TextArea display;
+	Label total;
+	String dbAddr = "jdbc:sqlite:stock.db";
+	Connector db;
+	Connection conn;
+	
+	public totalHandler(TextArea display, Label total) {
+		this.display = display;
+		this.total = total;
+	}
+	
+	@Override
+	public void handle(ActionEvent event) {
+		// TODO: send message to checkout_system
+		int total = 0;
+		
+		// update register display
+		this.display.setText("Total: $" + Integer.toString(total) + "\n");
+		
+		// TODO: send message to customer_display with the total amount
+	}
+}

@@ -1,0 +1,39 @@
+package application;
+
+import javafx.event.*;
+import javafx.scene.control.*;
+import java.util.*;
+
+public class PurchaseHandler implements EventHandler<ActionEvent> {
+	Item item;
+	int stock;
+	Label alert;
+	
+	public PurchaseHandler(Item item, Label alert) {
+		this.item = item;
+		this.alert = alert;
+	}
+	
+	@Override
+	public void handle(ActionEvent event) {
+		try {
+			OSSManager manager = application.Main.ossmanager;
+			this.stock = manager.selectStock(item.itemId);
+			Order order = null;
+			
+			if (stock > 0) {
+				String date = new Date().toString();
+				String addr = manager.getAddr();
+				order = new Order(0, date, addr, 1, 0, 0, 10, 100, item.itemId, item.name, item.price);
+			} else {
+				alert.setText(item.name + " is out of stock!");
+				alert.setVisible(true);
+			}
+			
+			Navigator navigator = application.Main.navigator;
+			application.Main.setStage(navigator.getView("ViewPurchase", item, order, 0, null));
+		} catch (Exception e) {
+			System.out.println("PurchaseHandler.handle: " + e.getMessage());
+		}
+	}
+}

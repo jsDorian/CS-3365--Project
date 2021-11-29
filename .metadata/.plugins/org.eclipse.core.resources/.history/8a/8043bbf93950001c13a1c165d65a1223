@@ -1,0 +1,28 @@
+package application;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
+import java.sql.*;
+import java.util.ArrayList;
+
+public class submitHandler implements EventHandler<ActionEvent> {
+	public Label error;
+	public TextField cardNumber;
+	public TextField pin;
+	public TextField amount;
+	public TextArea display;
+	
+	public submitHandler(Label error, TextField cardNumber, TextField pin, TextField amount, TextArea display) {
+		this.error = error;
+		this.cardNumber = cardNumber;
+		this.pin = pin;
+		this.amount = amount;
+		this.display = display;
+	}
+	
+	@Override
+	public void handle(ActionEvent event) {
+		
+	}
+}

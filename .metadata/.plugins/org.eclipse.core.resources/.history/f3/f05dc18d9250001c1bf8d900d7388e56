@@ -1,0 +1,18 @@
+package application;
+
+import javafx.event.*;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
+
+public class ViewOrdersHandler implements EventHandler<MouseEvent> {
+	Label lbl;
+	
+	public ViewOrdersHandler(Label btn) {
+		this.lbl = btn;
+	}
+	
+	@Override
+	public void handle(MouseEvent e) {
+		application.Main.setStage(application.Main.navigator.getView("ViewOrder", null, null, 0, lbl.getText()));
+	}
+}

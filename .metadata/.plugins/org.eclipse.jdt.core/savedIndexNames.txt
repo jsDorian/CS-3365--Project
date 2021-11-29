@@ -1,0 +1,8 @@
+INDEX VERSION 1.131+C:\Users\Success\cs 3365 cashier_register\.metadata\.plugins\org.eclipse.jdt.core
+2345495158.index
+1328695246.index
+3467015466.index
+1888415457.index
+1865797976.index
+3931633709.index
+669203828.index

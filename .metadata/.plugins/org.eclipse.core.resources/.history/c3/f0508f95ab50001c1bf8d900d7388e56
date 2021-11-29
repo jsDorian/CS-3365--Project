@@ -1,0 +1,72 @@
+package application;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
+import java.sql.*;
+import java.util.ArrayList;
+
+public class submitHandler implements EventHandler<ActionEvent> {
+	public Label error;
+	public TextField cardNumber;
+	public TextField pin;
+	public TextField amount;
+	public TextArea display;
+	public Client client;
+	
+	public submitHandler(Label error, TextField cardNumber, TextField pin, TextField amount, TextArea display, Client client) {
+		this.error = error;
+		this.cardNumber = cardNumber;
+		this.pin = pin;
+		this.amount = amount;
+		this.display = display;
+		this.client = client;
+	}
+	
+	@Override
+	public void handle(ActionEvent event) {
+		String action = getAction();
+		
+		if (action == "payment") {
+			paymentAction();
+		} else {
+			scaleAction();
+		}
+		
+		emptyControls();
+	}
+	
+	public void paymentAction() {
+		int cardNumber = Integer.parseInt(this.cardNumber.getText());
+		int pin = Integer.parseInt(this.pin.getText());
+		
+		// TODO: send card info to payment_authorization_system
+		String msg = String.join(",", Integer.toString(cardNumber), Integer.toString(pin));
+		this.client.queue.add(msg);
+	}
+	
+	public void scaleAction() {
+		int amount = Integer.parseInt(this.amount.getText());
+		
+		// TODO: send amount to checkout_system
+	}
+	
+	public void emptyControls() {
+		this.error.setText(null);
+		this.cardNumber.setText(null);
+		this.pin.setText(null);
+		this.amount.setText(null);
+	}
+	
+	public String getAction() {
+		var cardNumber = this.cardNumber.getText();
+		var pin = this.pin.getText();
+		var amount = this.amount.getText();
+		
+		if (amount == "") {
+			return "payment";
+		} else {
+			return "scale";
+		}
+	}
+}

@@ -1,0 +1,6 @@
+package application;
+
+public class SocketMessage {
+	public String type;
+	public int values[];
+}

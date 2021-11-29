@@ -1,0 +1,79 @@
+package application;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.stage.Stage;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.Scene;
+import javafx.event.*;
+
+public class Main extends Application {
+	public static Stage stage = null;
+	
+	public static void setStage(VBox center) {
+		VBox vbox_left = getNavBar();
+		VBox vbox_center = center;
+		
+		BorderPane root = new BorderPane();
+		Scene scene = new Scene(root,800,600);
+		
+		if (vbox_center != null && vbox_left != null) {
+			Stage primaryStage = application.Main.stage;
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			
+			vbox_center.setAlignment(Pos.CENTER);
+			
+			root.setLeft(vbox_left);
+			root.setCenter(vbox_center);
+		}
+	}
+	
+	public static VBox getNavBar() {
+		// ui elements for left pane
+		Label viewItems = new Label("View Items");
+		HBox hb1 = new HBox(viewItems);
+		Label viewInvoice = new Label("View Invoice");
+		HBox hb3 = new HBox(viewInvoice);
+		Label logout = new Label("Logout");
+		HBox hb4 = new HBox(logout);
+		
+		// layout
+		VBox vbox_left = new VBox(hb1, hb3, hb4);
+		
+		// style
+		style(new Label[] {viewItems, viewInvoice, logout});
+		vbox_left.setAlignment(Pos.CENTER);
+		vbox_left.setSpacing(40);
+		vbox_left.setMinHeight(300);
+		vbox_left.setBorder(new Border(new BorderStroke(Color.RED, 
+	            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		
+		return vbox_left;
+	}
+	
+	public static void style(Label[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			arr[i].setAlignment(Pos.CENTER);
+			arr[i].setTextFill(Color.WHITE);
+			arr[i].setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+		}
+	}
+	
+	@Override
+	public void start(Stage primaryStage) {
+		try {
+			stage = primaryStage;
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+}

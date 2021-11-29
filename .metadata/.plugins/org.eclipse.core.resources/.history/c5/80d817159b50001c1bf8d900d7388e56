@@ -1,0 +1,60 @@
+package application;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
+
+public class Client{
+
+    private final String account, hostName;
+    private final  int portNumber;
+    private  boolean stop;
+
+    Client(String account, String hostName, int portNumber )  {
+        this.account = account;
+        this.hostName = hostName;
+        this.portNumber = portNumber;
+    }
+
+    private void runClient(){
+        try {
+            stop = false;
+            Socket socket = new Socket(hostName, portNumber);
+            DataInputStream in = new DataInputStream( socket.getInputStream() );
+            DataOutputStream out = new DataOutputStream( socket.getOutputStream() );
+            out.writeUTF(getClientMessage());
+
+            while (! stop) {
+                TimeUnit.SECONDS.sleep(3);
+                out.writeUTF(getClientMessage());
+            }
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void activate(){
+        new Thread(()->runClient()).start();
+    }
+
+    public void stop(){
+        stop = true;
+    }
+
+    private String getClientMessage(){
+        LocalTime time = LocalTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return "from client # "+ account + " at "+ time.format(formatter);
+    }
+}

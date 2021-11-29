@@ -1,0 +1,47 @@
+package application;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.stage.Stage;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.Scene;
+import javafx.event.*;
+
+public class Main extends Application {
+	@Override
+	public void start(Stage primaryStage) {
+		try {
+			BorderPane root = new BorderPane();
+			Scene scene = new Scene(root,400,400);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			
+			// cash register function buttons
+			Button itemId = new Button("ITEM-ID");
+			Button scale = new Button("SCALE");
+			Button total = new Button("TOTAL");
+			
+			TextField input = new TextField();
+			Label error = new Label("N must be a positive integer!");
+			error.setVisible(false);
+			Button submit = new Button("Submit");
+			submit.setEventDispatcher(ButtonEventDispatcher::dispatcher);
+			
+			//submit.setOnAction(new NHandler(input, error));
+			
+			VBox functionKeys = new VBox(itemId, scale, total);
+			functionKeys.setAlignment(Pos.CENTER);
+			root.setCenter(functionKeys);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+}

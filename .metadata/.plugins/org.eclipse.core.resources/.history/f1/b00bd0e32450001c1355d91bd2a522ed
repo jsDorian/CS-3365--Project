@@ -1,0 +1,17 @@
+package application;
+
+public class BankAcct {
+	String name;
+	String email;
+	int acct;
+	int balance;
+	
+	public BankAcct() {}
+	
+	public BankAcct(String name, String email, int acct, int balance) {
+		this.name = name;
+		this.email = email;
+		this.acct = acct;
+		this.balance = balance;
+	}
+}

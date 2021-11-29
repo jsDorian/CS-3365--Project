@@ -1,0 +1,20 @@
+package application;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
+
+public class itemIdHandler implements EventHandler<ActionEvent> {
+	TextField field;
+	Label error;
+	
+	public itemIdHandler(TextField field, Label error) {
+		this.field = field;
+		this.error = error;
+	}
+	
+	@Override
+	public void handle(ActionEvent event) throws RuntimeException {
+		throw new RuntimeException("test error", new Throwable("test"));
+	}
+}

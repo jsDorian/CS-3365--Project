@@ -1,0 +1,8 @@
+package application;
+
+public class Product {
+	String name;
+	int price;
+	int amount;
+	int id;
+}

@@ -1,0 +1,14 @@
+package application;
+
+import javafx.event.ActionEvent;
+
+public class submitHandler {
+	public submitHandler() {
+		
+	}
+	
+	@Override
+	public void handle(ActionEvent event) {
+		
+	}
+}

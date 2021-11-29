@@ -1,0 +1,23 @@
+package application;
+
+public class BankThread implements Runnable {
+	Thread thread;
+	ThreadConnector connector;
+	boolean running;
+	
+	public BankThread(String name) {
+		thread.start();
+	}
+	
+	public void run() {
+		try {
+			while (running) {
+				Thread.sleep(10000);
+			}
+		} catch (Exception e) {}
+	}
+	
+	public void stop() {
+		running = false;
+	}
+}

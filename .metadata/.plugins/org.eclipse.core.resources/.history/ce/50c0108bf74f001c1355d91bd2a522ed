@@ -1,0 +1,21 @@
+package application;
+
+public class Product {
+	String name;
+	int price;
+	int amount;
+	int id;
+	
+	public Product(String name, int price, int amount) {
+		this.name = name;
+		this.price = price;
+		this.amount = amount;
+	}
+	
+	public Product(String name, int price, int amount, int id) {
+		this.name = name;
+		this.price = price;
+		this.amount = amount;
+		this.id = id;
+	}
+}

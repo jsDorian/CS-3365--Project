@@ -1,0 +1,28 @@
+package application;
+
+import javafx.event.*;
+import javafx.scene.control.*;
+
+public class LoginHandler implements EventHandler<ActionEvent> {
+	TextField email;
+	TextField pwd;
+	Label error;
+	
+	public LoginHandler(TextField email, TextField pwd, Label error) {
+		this.email = email;
+		this.pwd = pwd;
+		this.error = error;
+	}
+	
+	@Override
+	public void handle(ActionEvent event) {
+		String email = this.email.getText();
+		String pwd = this.pwd.getText();
+		
+		if (!application.Main.ossmanager.login(email, pwd)) {
+			error.setVisible(true);
+		} else {
+			application.Main.navigator = new Navigator();
+		}
+	}
+}

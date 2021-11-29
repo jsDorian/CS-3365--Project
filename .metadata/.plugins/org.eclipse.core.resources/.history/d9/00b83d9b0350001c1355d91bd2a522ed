@@ -1,0 +1,26 @@
+package application;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
+import java.sql.*;
+import java.util.ArrayList;
+
+public class scaleHandler implements EventHandler<ActionEvent> {
+	TextField field;
+	Label error;
+	TextArea display;
+	String dbAddr = "jdbc:sqlite:stock.db";
+	Connector db;
+	Connection conn;
+	
+	public itemIdHandler(TextField field, Label error, TextArea display) {
+		this.field = field;
+		this.error = error;
+		this.display = display;
+		
+		// get connection to stock database
+		db = new Connector(dbAddr);
+		conn = db.getConnection();
+	}
+}

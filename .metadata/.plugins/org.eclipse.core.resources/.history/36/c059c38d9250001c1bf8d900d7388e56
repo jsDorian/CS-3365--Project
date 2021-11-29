@@ -1,0 +1,54 @@
+package application;
+
+import javafx.event.*;
+import javafx.scene.control.*;
+import java.util.*;
+
+public class OrderHandler implements EventHandler<ActionEvent> {
+	Item item;
+	Label alert;
+	Order order;
+	ComboBox delivery;
+	
+	public OrderHandler(Item item, Label alert, Order order, ComboBox delivery) {
+		this.item = item;
+		this.alert = alert;
+		this.order = order;
+		this.delivery = delivery;
+	}
+	
+	@Override
+	public void handle(ActionEvent event) {
+		try {
+			Navigator navigator = application.Main.navigator;
+			OSSManager manager = application.Main.ossmanager;
+			
+			int d, p;
+			
+			if (delivery.getValue() != null) {
+				d = delivery.getValue().equals("Delivery") ? 1 : 0;
+				p = d == 1 ? 0 : 1;
+			} else {
+				p = 1;
+				d = 0;
+			}
+			
+			order.delivery = d;
+			order.pickup = p;
+			
+			if (d == 1) {
+				order.total = item.price + 3;
+				order.deliveryFee = 3;
+			} else {
+				order.total = item.price;
+				order.deliveryFee = 0;
+			}
+			
+			manager.selectAcct(manager.getName(), manager.getEmail(), order);
+			
+			application.Main.setStage(navigator.getView("ViewItems", null, null, 0, null));
+		} catch (Exception e) {
+			System.out.println("OrderHandler.handle: " + e.getMessage());
+		}
+	}
+}

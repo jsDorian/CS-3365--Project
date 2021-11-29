@@ -1,0 +1,60 @@
+package application;
+
+import javafx.event.*;
+import javafx.scene.control.*;
+
+public class RegistrationHandler implements EventHandler<ActionEvent> {
+	TextField name;
+	TextField username;
+	TextField email;
+	TextField pwd;
+	TextField addr;
+	TextField acct;
+	TextField amt;
+	ComboBox premium;
+	Label error;
+	
+	public RegistrationHandler(TextField name, TextField username, TextField email, TextField pwd, TextField addr, TextField acct, TextField amt, Label error, ComboBox premium) {
+		this.name = name;
+		this.username = username;
+		this.email = email;
+		this.pwd = pwd;
+		this.addr = addr;
+		this.acct = acct;
+		this.amt = amt;
+		this.error = error;
+		this.premium = premium;
+	}
+	
+	@Override
+	public void handle(ActionEvent event) {
+		try {
+			String name = this.name.getText();
+			String email = this.email.getText();
+			int acct = Integer.parseInt(this.acct.getText());
+			int amt = Integer.parseInt(this.amt.getText());
+			String username = this.username.getText();
+			String pwd = this.pwd.getText();
+			int premium;
+			
+			if (this.premium.getValue().toString().equals("Yes")) {
+				premium = 1;
+				amt -= 40;
+			} else {
+				premium = 0;
+			}
+			
+			String addr = this.addr.getText();
+			
+			OSSManager manager = application.Main.ossmanager;
+			manager.insertUsers(name, username, email, acct, premium, addr);
+			manager.insertPwd(pwd);
+			manager.insertBank(name, email, acct, amt);
+			
+			application.Main.login(application.Main.stage);
+		} catch (Exception e) {
+			System.out.println("RegistrationHandler: " + e.getMessage());
+			this.error.setVisible(true);
+		}
+	}
+}

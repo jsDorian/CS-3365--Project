@@ -1,0 +1,42 @@
+package application;
+
+public class Order {
+	int orderNumber;
+	String date;
+	String addr;
+	int amount;
+	int delivery;
+	int pickup;
+	int deliveryFee;
+	int total;
+	int itemId;
+	String itemName;
+	int itemPrice;
+	
+	public Order() {}
+	
+	public Order(int orderNumber, String date, String addr, int amount, int delivery, int pickup, int deliveryFee, int total) {
+		this.orderNumber = orderNumber;
+		this.date = date;
+		this.addr = addr;
+		this.amount = amount;
+		this.delivery = delivery;
+		this.pickup = pickup;
+		this.deliveryFee = deliveryFee;
+		this.total = total;
+	}
+	
+	public Order(int orderNumber, String date, String addr, int amount, int delivery, int pickup, int deliveryFee, int total, int itemId, String itemName, int itemPrice) {
+		this.orderNumber = orderNumber;
+		this.date = date;
+		this.addr = addr;
+		this.amount = amount;
+		this.delivery = delivery;
+		this.pickup = pickup;
+		this.deliveryFee = deliveryFee;
+		this.total = total;
+		this.itemId = itemId;
+		this.itemName = itemName;
+		this.itemPrice = itemPrice;
+	}
+}

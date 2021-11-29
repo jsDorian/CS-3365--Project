@@ -1,0 +1,11 @@
+package application;
+
+import javafx.event.*;
+import javafx.scene.input.*;
+
+public class LogoutHandler implements EventHandler<MouseEvent> {
+	@Override
+	public void handle(MouseEvent e) {
+		application.Main.navigator.getView("Logout", null, null, 0, null);
+	}
+}

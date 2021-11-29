@@ -1,0 +1,25 @@
+package application;
+
+public class User {
+	int userId;
+	String name;
+	String username;
+	String email;
+	String addr;
+	int premium;
+	boolean auth;
+	
+	public User(int userId, String name, String username, String email, int premium, String addr) {
+		this.userId = userId;
+		this.name = name;
+		this.username = username;
+		this.email = email;
+		this.auth = true;
+		this.premium = premium;
+		this.addr = addr;
+	}
+	
+	public void deauth() {
+		this.auth = false;
+	}
+}

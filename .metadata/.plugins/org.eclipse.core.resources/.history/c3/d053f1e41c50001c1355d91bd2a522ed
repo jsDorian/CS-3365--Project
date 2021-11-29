@@ -1,0 +1,73 @@
+package application;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.stage.Stage;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.Scene;
+import javafx.event.*;
+
+public class Main extends Application {
+	Boolean firstUse = true;
+	
+	@Override
+	public void start(Stage primaryStage) {
+		try {
+			BorderPane root = new BorderPane();
+			Scene scene = new Scene(root,400,400);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			
+			// cash register function buttons
+			Button itemId = new Button("ITEM-ID");
+			Button scale = new Button("SCALE");
+			Button total = new Button("TOTAL");
+			
+			// label for total weight of bulk items
+			Label weight = new Label("");
+			weight.setVisible(false);
+			
+			// label for total cost
+			//Label total = new Label("");
+			//total.setVisible(false);
+			
+			// error label for product ids
+			Label error = new Label("Invalid product ID! Product not found!");
+			error.setTextFill(Color.RED);
+			error.setVisible(false);
+			
+			// input for product ids
+			TextField productId = new TextField();
+			productId.setPromptText("Enter a product ID");
+			
+			// display area for transaction details and results
+			TextArea registerDisplay = new TextArea();
+			registerDisplay.setText("Register Display");
+			registerDisplay.setEditable(false);
+			
+			// event handlers for controls
+			itemId.setOnAction(new itemIdHandler(productId, error, registerDisplay, firstUse));
+			scale.setOnAction(new scaleHandler(registerDisplay, weight));
+			total.setOnAction(new totalHandler(registerDisplay, total));
+			// positioning controls
+			VBox functionKeys = new VBox(itemId, scale, total);
+			functionKeys.setAlignment(Pos.CENTER);
+			
+			VBox input = new VBox(error, productId, registerDisplay);
+			input.setAlignment(Pos.CENTER);
+			
+			root.setLeft(functionKeys);
+			root.setCenter(input);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+}

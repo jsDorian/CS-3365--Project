@@ -1,0 +1,214 @@
+package application;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.stage.Stage;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.Scene;
+import javafx.event.*;
+
+public class Main extends Application {
+	public static OSSManager ossmanager = null;
+	public static Navigator navigator = null;
+	public static Stage stage = null;
+	
+	public static void setStage(VBox center) {
+		VBox vbox_left = getNavBar();
+		VBox vbox_center = center;
+		
+		BorderPane root = new BorderPane();
+		Scene scene = new Scene(root,800,600);
+		
+		if (vbox_center != null && vbox_left != null) {
+			Stage primaryStage = application.Main.stage;
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			
+			vbox_center.setAlignment(Pos.CENTER);
+			
+			root.setLeft(vbox_left);
+			root.setCenter(vbox_center);
+		}
+	}
+	
+	public static VBox getNavBar() {
+		// ui elements for left pane
+		Label viewItems = new Label("View Items");
+		HBox hb1 = new HBox(viewItems);
+		Label viewInvoice = new Label("View Invoice");
+		HBox hb3 = new HBox(viewInvoice);
+		Label logout = new Label("Logout");
+		HBox hb4 = new HBox(logout);
+		
+		// set listeners
+		viewItems.setOnMouseClicked(new ViewItemsHandler(viewItems));
+		viewInvoice.setOnMouseClicked(new ViewInvoiceHandler(viewInvoice));
+		logout.setOnMouseClicked(new LogoutHandler());
+		
+		// layout
+		VBox vbox_left = new VBox(hb1, hb3, hb4);
+		
+		// style
+		style(new Label[] {viewItems, viewInvoice, logout});
+		vbox_left.setAlignment(Pos.CENTER);
+		vbox_left.setSpacing(40);
+		vbox_left.setMinHeight(300);
+		vbox_left.setBorder(new Border(new BorderStroke(Color.RED, 
+	            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		
+		return vbox_left;
+	}
+	
+	public static void style(Label[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			arr[i].setAlignment(Pos.CENTER);
+			arr[i].setTextFill(Color.WHITE);
+			arr[i].setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+		}
+	}
+	
+	@Override
+	public void start(Stage primaryStage) {
+		try {
+			stage = primaryStage;
+			
+			// OSSManager thread
+			ossmanager = new OSSManagerThread("OSSManager").manager;
+			
+			login(stage);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void login(Stage primaryStage) {
+		BorderPane root = new BorderPane();
+		Scene scene = new Scene(root,400,400);
+		//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		
+		// ui elements
+		Label emailPrompt = new Label("Email:");
+		TextField email = new TextField();
+		
+		Label pwdPrompt = new Label("Password:");
+		TextField pwd = new TextField();
+		
+		Label error = new Label("Invalid credentials! Try again!");
+		error.setVisible(false);
+		
+		Button login = new Button("Login");
+		Button register = new Button("Register");
+		
+		login.setOnAction(new LoginHandler(email, pwd, error));
+		register.setOnAction(new RegisterHandler());
+		
+		// layout
+		HBox emailBox = new HBox(emailPrompt, email);
+		HBox pwdBox = new HBox(pwdPrompt, pwd);
+		HBox errorBox = new HBox(error);
+		VBox btnBox = new VBox(login, register);
+		
+		VBox vbox = new VBox(emailBox, pwdBox, errorBox, btnBox);
+		
+		// styles
+		emailBox.setAlignment(Pos.CENTER);
+		emailPrompt.setMinWidth(50);
+		pwdPrompt.setMinWidth(50);
+		pwdBox.setAlignment(Pos.CENTER);
+		errorBox.setAlignment(Pos.CENTER);
+		error.setTextFill(Color.RED);
+		btnBox.setAlignment(Pos.CENTER);
+		vbox.setAlignment(Pos.CENTER);
+		
+		root.setCenter(vbox);
+	}
+	
+	public static void register() {
+		BorderPane root = new BorderPane();
+		Scene scene = new Scene(root,400,400);
+		application.Main.stage.setScene(scene);
+		application.Main.stage.show();
+		
+		Label namePrompt = new Label("Name:");
+		TextField name = new TextField();
+		
+		Label usernamePrompt = new Label("Username:");
+		TextField username = new TextField();
+		
+		Label emailPrompt = new Label("Email:");
+		TextField email = new TextField();
+		
+		Label pwdPrompt = new Label("Password:");
+		TextField pwd = new TextField();
+		
+		Label addrPrompt = new Label("Address:");
+		TextField addr = new TextField();
+		
+		Label acctPrompt = new Label("Account number:");
+		TextField acct = new TextField();
+		
+		Label amtPrompt = new Label("Amount:");
+		TextField amt = new TextField();
+		
+		Label premiumPrompt = new Label("Premium");
+		ComboBox premium = new ComboBox();
+		premium.getItems().addAll("Yes", "No");
+		
+		Label error = new Label("Invalid entry! Username, password, and email are taken! Try again!");
+		error.setVisible(false);
+		
+		Button submit = new Button("Submit");
+		
+		submit.setOnAction(new RegistrationHandler(name, username, email, pwd, addr, acct, amt, error, premium));
+		
+		// layout
+		HBox nameBox = new HBox(namePrompt, name);
+		HBox usernameBox = new HBox(usernamePrompt, username);
+		HBox emailBox = new HBox(emailPrompt, email);
+		HBox pwdBox = new HBox(pwdPrompt, pwd);
+		HBox addrBox = new HBox(addrPrompt, addr);
+		HBox acctBox = new HBox(acctPrompt, acct);
+		HBox amtBox = new HBox(amtPrompt, amt);
+		HBox premiumBox = new HBox(premiumPrompt, premium);
+		HBox errorBox = new HBox(error);
+		VBox btnBox = new VBox(submit);
+		
+		VBox vbox = new VBox(nameBox, usernameBox, emailBox, pwdBox, addrBox, acctBox, amtBox, premiumBox, errorBox, btnBox);
+		
+		// styles
+		nameBox.setAlignment(Pos.CENTER);
+		namePrompt.setMinWidth(50);
+		usernamePrompt.setMinWidth(50);
+		addrPrompt.setMinWidth(50);
+		acctPrompt.setMinWidth(50);
+		amtPrompt.setMinWidth(50);
+		nameBox.setMinWidth(50);
+		usernameBox.setMinWidth(50);
+		addrBox.setMinWidth(50);
+		acctBox.setMinWidth(50);
+		amtBox.setMinWidth(50);
+		usernameBox.setAlignment(Pos.CENTER);
+		addrBox.setAlignment(Pos.CENTER);
+		acctBox.setAlignment(Pos.CENTER);
+		amtBox.setAlignment(Pos.CENTER);
+		emailBox.setAlignment(Pos.CENTER);
+		emailPrompt.setMinWidth(50);
+		pwdPrompt.setMinWidth(50);
+		pwdBox.setAlignment(Pos.CENTER);
+		errorBox.setAlignment(Pos.CENTER);
+		error.setTextFill(Color.RED);
+		btnBox.setAlignment(Pos.CENTER);
+		vbox.setAlignment(Pos.CENTER);
+		
+		root.setCenter(vbox);
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+}

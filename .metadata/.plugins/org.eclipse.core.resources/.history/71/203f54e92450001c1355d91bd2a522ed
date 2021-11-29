@@ -1,0 +1,279 @@
+package application;
+
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+
+import java.util.*;
+import java.sql.*;
+
+public class Navigator {
+	Connection itemsConn = null;
+	Connection ordersConn = null;
+	
+	public Navigator() {
+		application.Main.setStage(getView("ViewItems", null, null, 0, null));
+	}
+	
+	public VBox getView(String section, Item item, Order order, int arg0, String arg1) {
+		if (section == "ViewItems") {
+			return ViewItems();
+		}
+		
+		if (section == "ViewOrder") {
+			return ViewOrder(arg1);
+		}
+		
+		if (section == "ViewInvoice") {
+			return ViewInvoice();
+		}
+		
+		if (section == "ViewPurchase") {
+			return ViewPurchase(item, order);
+		}
+		
+		if (section == "Logout") {
+			application.Main.ossmanager.logout();
+		}
+		
+		return null;
+	}
+	
+	private ArrayList<Item> getItems() {
+		return application.Main.ossmanager.selectAllItems();
+	}
+	
+	private Order getOrder(int ordernumber) {
+		return application.Main.ossmanager.selectOrder(ordernumber);
+	}
+	
+	private ArrayList<Order> getInvoice() {
+		return application.Main.ossmanager.selectAllOrders();
+	}
+	
+	private VBox ViewItems() {
+		ArrayList<Item> items = getItems();
+		
+		VBox vbox = new VBox();
+		HBox hbox = new HBox(new Label("Name"), new Label("Description"), new Label("Price"), new Label("Stock"));
+		hbox.setSpacing(28);
+		hbox.setAlignment(Pos.CENTER_LEFT);
+		vbox.getChildren().add(hbox);
+		
+		for (var i = 0; i < items.size(); i++) {
+			Item item = items.get(i);
+			Label name = new Label(item.name);
+			Label desc = new Label(item.desc);
+			Label price = new Label(Integer.toString(item.price));
+			Label stock = new Label(String.valueOf(application.Main.ossmanager.selectStock(item.itemId)));
+			Button purchase = new Button("Buy");
+			Label alert = new Label();
+			alert.setTextFill(Color.RED);
+			alert.setVisible(false);
+			
+			purchase.setOnAction(new PurchaseHandler(item, alert));
+			
+			hbox = new HBox(name, desc, price, stock, purchase, alert);
+			hbox.setSpacing(30);
+			vbox.getChildren().add(hbox);
+		}
+		
+		vbox.setSpacing(40);
+		return vbox;
+	}
+	
+	private VBox ViewOrder(String orderNumber) {
+		Order order = getOrder(Integer.parseInt(orderNumber));
+		
+		VBox coll = new VBox();
+		
+		Label lbl1 = new Label("Order Number");
+		Label lbl2 = new Label("ItemId");
+		Label lbl3 = new Label("Item Name");
+		Label lbl4 = new Label("Price");
+		Label lbl5 = new Label("Amount");
+		Label lbl6 = new Label("Address");
+		Label lbl7 = new Label("Delivery");
+		Label lbl8 = new Label("PickUp");
+		Label lbl9 = new Label("Delivery Fee");
+		Label lbl10 = new Label("Total");
+		
+		Label[] arr1 = new Label[] {lbl1, lbl2, lbl3, lbl4, lbl5, lbl6, lbl7, lbl8, lbl9, lbl10};
+		arr1 = setSpacing(arr1);
+		
+		HBox header = new HBox();
+		header.setSpacing(40);
+		
+		for (int i = 0; i < arr1.length; i++) {
+			header.getChildren().add(arr1[i]);
+		}
+		
+		coll.getChildren().add(header);
+		
+		HBox item = new HBox();
+		
+		Label orderNum = new Label(Integer.toString(order.orderNumber));
+		Label itemId = new Label(Integer.toString(order.itemId));
+		Label itemName = new Label(order.itemName);
+		Label itemPrice = new Label(Integer.toString(order.itemPrice));
+		Label amount = new Label(Integer.toString(order.amount));
+		Label addr = new Label(order.addr);
+		
+		Label delivery;
+		if (order.delivery == 1) {
+			delivery = new Label("Yes");
+		} else {
+			delivery = new Label("No");
+		}
+		
+		Label pickup;
+		if (order.pickup == 1) {
+			pickup = new Label("Yes");
+		} else {
+			pickup = new Label("No");
+		}
+		
+		Label deliveryFee = new Label(Integer.toString(order.deliveryFee));
+		Label total = new Label(Integer.toString(order.total));
+		
+		Label[] arr = new Label[] {orderNum, itemId, itemName, itemPrice, amount, addr, delivery, pickup, deliveryFee, total};
+		arr = setSpacing(arr);
+		
+		item = new HBox();
+		
+		for (int i = 0; i < arr.length; i++) {
+			item.getChildren().add(arr[i]);
+		}
+		
+		item.setSpacing(40);
+		coll.getChildren().add(item);
+		
+		return coll;
+	}
+	
+	private VBox ViewInvoice() {
+		ArrayList<Order> orders = getInvoice();
+		
+		VBox coll = new VBox();
+		Label lbl1 = new Label("Order Number");
+		Label lbl2 = new Label("Date");
+		Label lbl3 = new Label("Address");
+		Label lbl4 = new Label("Amount");
+		Label lbl5 = new Label("Delivery");
+		Label lbl6 = new Label("PickUp");
+		Label lbl7 = new Label("Delivery Fee");
+		Label lbl8 = new Label("Total");
+		
+		Label[] headerArr = new Label[] {lbl1, lbl2, lbl3, lbl4, lbl5, lbl6, lbl7, lbl8};
+		
+		headerArr = setSpacing(headerArr);
+		
+		HBox header = new HBox(headerArr[0], headerArr[1], headerArr[2], headerArr[3], headerArr[4], headerArr[5], headerArr[6], headerArr[7]);
+		header.setSpacing(40);
+		
+		coll.getChildren().add(header);
+		
+		for (var i = 0; i < orders.size(); i++) {
+			HBox item = new HBox();
+			
+			Order order = orders.get(i);
+			
+			Label orderNumber = new Label(Integer.toString(order.orderNumber));
+			Label date = new Label(order.date);
+			Label addr = new Label(order.addr);
+			Label amount = new Label(Integer.toString(order.amount));
+			
+			Label delivery;
+			if (order.delivery == 1) {
+				delivery = new Label("Yes");
+			} else {
+				delivery = new Label("No");
+			}
+			
+			Label pickup;
+			if (order.pickup == 1) {
+				pickup = new Label("Yes");
+			} else {
+				pickup = new Label("No");
+			}
+			
+			Label deliveryFee = new Label(Integer.toString(order.deliveryFee));
+			Label total = new Label(Integer.toString(order.total));
+			
+			Label[] arr = new Label[] {orderNumber, date, addr, amount, delivery, pickup, deliveryFee, total};
+			
+			arr = setSpacing(arr);
+			
+			item = new HBox(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7]);
+			item.setSpacing(40);
+			item.setOnMouseClicked(new ViewOrdersHandler(arr[0]));
+			coll.getChildren().add(item);
+		}
+		
+		return coll;
+	}
+	
+	private VBox ViewPurchase(Item item, Order order) {
+		VBox view = new VBox();
+		
+		HBox header = new HBox();
+		
+		Label lbl1 = new Label("Name");
+		Label lbl2 = new Label("Description");
+		Label lbl3 = new Label("Price");
+		Label lbl4 = new Label("");
+		Label lbl5 = new Label("Delivery");
+		Label lbl6 = new Label("Address");
+		Label lbl7 = new Label("Stock");
+		
+		header.getChildren().add(lbl1);
+		header.getChildren().add(lbl2);
+		header.getChildren().add(lbl3);
+		header.getChildren().add(lbl4);
+		header.getChildren().add(lbl5);
+		header.getChildren().add(lbl6);
+		header.getChildren().add(lbl7);
+		
+		header.setSpacing(40);
+		view.getChildren().add(header);
+		
+		HBox itemBox = new HBox();
+		
+		Label name = new Label(item.name);
+		Label desc = new Label(item.desc);
+		Label price = new Label(String.valueOf(item.price));
+		Button completePurchase = new Button("Complete Purchase!");
+		ComboBox delivery = new ComboBox();
+		delivery.getItems().addAll("PickUp", "Delivery");
+		TextField addr = new TextField("default");
+		Label stock = new Label();
+		
+		itemBox.getChildren().add(name);
+		itemBox.getChildren().add(desc);
+		itemBox.getChildren().add(price);
+		itemBox.getChildren().add(delivery);
+		itemBox.getChildren().add(completePurchase);
+		
+		itemBox.setSpacing(40);
+		view.getChildren().add(itemBox);
+		
+		Label alert = new Label("");
+		HBox alertBox = new HBox(alert);
+		alertBox.setSpacing(40);
+		view.getChildren().add(alertBox);
+		
+		completePurchase.setOnAction(new OrderHandler(item, alert, order, delivery));
+		
+		return view;
+	}
+	
+	private Label[] setSpacing(Label[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			arr[i].setMinWidth(77);
+			arr[i].setMaxWidth(77);
+		}
+		
+		return arr;
+	}
+}

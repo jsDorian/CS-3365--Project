@@ -1,0 +1,27 @@
+package application;
+
+public class OSSManagerThread implements Runnable {
+	Thread thread;
+	OSSManager manager;
+	boolean running;
+	
+	public OSSManagerThread(String name) {
+		ThreadGroup tg = Thread.currentThread().getThreadGroup();
+		thread = new Thread(tg, this, name);
+		manager = new OSSManager();
+		running = true;
+		thread.start();
+	}
+	
+	public void run() {
+		try {
+			while (running) {
+				Thread.sleep(100);
+			}
+		} catch (Exception e) {}
+	}
+	
+	public void stop() {
+		running = false;
+	}
+}

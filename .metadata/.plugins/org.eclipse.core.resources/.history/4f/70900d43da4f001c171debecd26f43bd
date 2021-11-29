@@ -1,0 +1,18 @@
+package application;
+
+import javafx.event.*;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
+
+public class ViewItemsHandler implements EventHandler<MouseEvent> {
+	Label btn;
+	
+	public ViewItemsHandler(Label btn) {
+		this.btn = btn;
+	}
+	
+	@Override
+	public void handle(MouseEvent event) {
+		application.Main.setStage(application.Main.navigator.getView("ViewItems", null, null, 0, null));
+	}
+}

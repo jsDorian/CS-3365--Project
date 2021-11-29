@@ -1,0 +1,55 @@
+package application;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
+import java.sql.*;
+import java.util.ArrayList;
+
+public class itemIdHandler implements EventHandler<ActionEvent> {
+	TextField field;
+	Label error;
+	String dbAddr = "jdbc:sqlite:stock.db";
+	Connector db;
+	Connection conn;
+	
+	public itemIdHandler(TextField field, Label error) {
+		this.field = field;
+		this.error = error;
+		db = new Connector(dbAddr);
+		conn = db.getConnection();
+	}
+	
+	@Override
+	public void handle(ActionEvent event) throws RuntimeException {
+		int id = Integer.parseInt(field.getText());
+		
+		try {
+			PreparedStatement stmt = this.db.prepareStatement("SELECT * FROM users WHERE UserId = ? LIMIT 1");
+			stmt.setInt(1, userId);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				String username = rs.getString("Username");
+				String name = rs.getString("Name");
+				String email = rs.getString("Email");
+				String addr = rs.getString("Address");
+				int premium = rs.getInt("Premium");
+				
+				user = new User(userId, name, username, email, premium, addr);
+			}
+			
+			rs.close();
+			stmt.close();
+			
+			closeConn(new Connection[] {this.usersConn, this.pwdConn});
+		} catch (Exception e) {
+			System.out.println("getUser: " + e.getMessage());
+		}
+		
+		return;
+		
+		throw new RuntimeException("test error", new Throwable("test"));
+	}
+}

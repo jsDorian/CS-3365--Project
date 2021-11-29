@@ -1,0 +1,16 @@
+package application;
+
+import javafx.scene.control.*;
+import javafx.event.*;
+
+public class itemIdEventDispatcher extends Button {
+	public static Event dispatcher(Event event, EventDispatchChain chain) {
+		try {
+			var result = chain.dispatchEvent(event);
+			//chain.append(ButtonEventDispatcher::dispatcher);
+			return result;
+		} catch (final Exception e) {
+			return null;
+		}
+	}
+}
